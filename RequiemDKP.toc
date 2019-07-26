@@ -1,0 +1,12 @@
+## Interface: 80200 
+## Title: RequiemDKP
+## Notes: Nothing to be done.
+## Version: 0.8
+## DefaultState: enabled
+## SavedVariables: RDKPTable
+
+init.lua
+bidding.lua
+dkp.lua
+fileIO.lua
+# The 'Interface' tag must be set to the correct interface version once we know what that is
