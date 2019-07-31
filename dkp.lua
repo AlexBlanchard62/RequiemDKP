@@ -1,7 +1,13 @@
 --------------------------------------
 -- Namespace
 --------------------------------------
-local _, core = ...;
-core.DKP = {}; -- adds Config table to addon namespace
+local _, rdkp = ...;
+rdkp.DKP = {
+    ["AddDKP"] = function(playerName, dkp){
+        rdkp.Accounts[rdkp.Names[playerName]] = rdkp.Accounts[rdkp.Names[playerName]] + dkp;
+    } 
 
-local DKP = core.DKP;
+
+
+}; -- adds Config table to addon namespace
+

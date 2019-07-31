@@ -1,7 +1,91 @@
 --------------------------------------
 -- Namespace
 --------------------------------------
-local _, core = ...;
-core.Bidding = {}; -- adds Config table to addon namespace
+local _, rdkp = ...;
 
-local Bidding = core.Bidding;
+local items = {};
+
+rdkp.Bidding = {
+
+    ["StartBid"] = function(itemName, amount){
+
+        if(items[itemName] and items[itemName].isOpen)
+            rdkp:Print("Bidding has already started for " + itemName + " x" + items[itemName].amount);
+            return;
+        end
+
+        if(not amount or amount < 1) then
+            amount = 1;
+        end
+
+        items[itemName] = {
+            ["amount"] = amount,
+            ["bids"] = {},
+            ["isOpen"] = true,
+            ["priority"] = 0
+        };
+
+        if(not rdkp.PrioTable[itemName]) then
+            rdkp:Print("Item not in priority table. Bids will be evaluated without priority.");
+        else
+            items[itemname].priority = rdkp.PrioTable[itemName];
+        end
+
+        rdkp:Print("Bidding has started for " + itemName + " x" + amount);
+    },
+
+    ["EndBid"] = function(itemName){
+        if (not items[itemName]) then
+            rdkp:Print("Bidding for " + itemName + " not found");
+            return;
+        elseif (not items[itemName].isOpen) then
+            rdkp:Print("Bidding has already ended for " + itemName);
+            return;
+        end
+
+        items[itemName].isOpen = false;
+        items[itemName].sortedBids = {};
+        table.foreach (items[itemName].bids, function(k, v) table.insert(sortedBids, k) end);
+        table.sort(items[itemName].sortedBids, sortFunction));
+
+        rdkp:Print("All bids for " + itemName + ":");
+        for i = 1, #items[itemName].sortedBids do
+            playerName = items[itemName].sortedBids[i];
+            rdkp:Print(i + ". " + playerName + " - " + items[itemName].bids[playerName].dkp);
+        end
+
+        winners = {};
+        rdkp:Print("Winner(s) of " + itemName + ":");
+        for i = 1, amount do
+            winner = items[itemName].sortedBids[i];
+            rdkp:Print(winner);
+            rdkp.AddDKP(winner, -items[itemName].bids[winner].dkp);
+        end
+    },
+
+    ["AddBid"] = function(itemName, playerName, dkp){
+
+    },
+
+    ["CancelBid"] = function(itemName){
+        items[itemName] = nil;
+        rdkp:Print("Bidding cancelled for " + itemName);
+    },
+
+
+}; 
+
+local sortFunction = function(kA, kB) {
+    playerA = items[itemName].sortedBids[kA];
+    playerB = items[itemName].sortedBids[kB];
+    priorityA = items[itemName].bids[playerA].priority;
+    priorityB = items[itemName].bids[playerB].priority;
+    dkpA = items[itemName].bids[playerA].dkp;
+    dkpB = items[itemName].bids[playerB].dkp;
+    if (priorityA == priorityB) then
+        return dkpA > dkpB;
+    else
+        return priorityA;
+    end
+}
+

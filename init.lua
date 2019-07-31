@@ -1,37 +1,54 @@
 ----------------------
 -- Namespace
 ----------------------
-local _, core = ...; 
+local _, rdkp = ...; 
+
+rdkp.Config = {};
+
+local Config = rdkp.Config;
+
+local defaults = {
+	theme = {
+		r = 0, 
+		g = 0.8, -- 204/255
+		b = 1,
+		hex = "00ccff"
+	}
+}
+
+function Config:GetThemeColor()
+	local c = defaults.theme;
+	return c.r, c.g, c.b, c.hex;
+end
 
 --------------------------------------
 -- Custom Slash Command
 --------------------------------------
-core.commands = {
+rdkp.commands = {
 
 	-- this will call a function from bidding.lua
-	["startbid"] = core.Bidding.StartBid,
+	["startbid"] = "rdkp.Bidding.StartBid",
 
-	["endbid"] = core.Bidding.EndBid,
+	["endbid"] = "rdkp.Bidding.EndBid",
 
-	["guilddkp"] = core.DKP.GuildWide,
+	["guilddkp"] = "rdkp.DKP.GuildWide",
 
-	["dkp"] = core.DKP.Member,
+	["dkp"] = "rdkp.DKP.Member",
 
 	["help"] = function()
 		print(" ");
-		core:Print("List of slash commands:")
-		core:Print("|cff00cc66/rdkp startbid {item name}|r - starts the bidding");
-        core:Print("|cff00cc66/rdkp endbid|r - ends the bidding");
-        core:Print("|cff00cc66/rdkp guilddkp {dkp amount (+/-)}|r - shows config menu");
-		core:Print("|cff00cc66/rdkp dkp {Character Name (+/-)} {dkp amount}|r - shows help info");
+		rdkp:Print("List of slash commands:")
+		rdkp:Print("|cff00cc66/rdkp startbid {item name}|r - starts the bidding");
+        rdkp:Print("|cff00cc66/rdkp endbid|r - ends the bidding");
+        rdkp:Print("|cff00cc66/rdkp guilddkp {dkp amount (+/-)}|r - shows config menu");
+		rdkp:Print("|cff00cc66/rdkp dkp {Character Name (+/-)} {dkp amount}|r - shows help info");
 		print(" ");
 	end,
 };
 
-local function HandleSlashCommands(str)	
+local function HandleSlashCommands(str)
 	if (#str == 0) then	
-		-- User just entered "/rdkp" with no additional args
-		core.commands.help();
+		rdkp.commands.help();
 		return;		
 	end	
 	
@@ -42,7 +59,7 @@ local function HandleSlashCommands(str)
 		end
 	end
 	
-	local commands = core.commands; 
+	local commands = rdkp.commands; 
 	
 	for id, arg in ipairs(args) do
 		if (#arg > 0) then -- check for white space
@@ -57,7 +74,7 @@ local function HandleSlashCommands(str)
 				end
 			else
 				-- incorrect input
-				core.commands.help();
+				rdkp.commands.help();
 				return;
 			end
 		end
@@ -65,14 +82,14 @@ local function HandleSlashCommands(str)
 end
 
 -- custom print function
-function core:Print(...)
+function rdkp:Print(...)
     local hex = select(4, self.Config:GetThemeColor());
-    local prefix = string.format("|cff%s%s|r", hex:upper(), "Aura Tracker:");	
+    local prefix = string.format("|cff%s%s|r", hex:upper(), "RequiemDKP:");	
     DEFAULT_CHAT_FRAME:AddMessage(string.join(" ", prefix, ...));
 end
 
 --initializer
-function core:init(event, name)
+function rdkp:init(event, name)
 	if (name ~= "RequiemDKP") then return end 
 
 	-- allows using left and right buttons to move through chat 'edit' box
@@ -92,13 +109,13 @@ function core:init(event, name)
 		FrameStackTooltip_Toggle();
 	end
 
-	SLASH_ReqiemDKP1 = "/rdkp";
+	SLASH_RequiemDKP1 = "/rdkp";
 	SlashCmdList.RequiemDKP = HandleSlashCommands;
 	
-    core:Print("Requiem DKP initiated", UnitName("player").."!");
+    rdkp:Print("Requiem DKP initiated", UnitName("player").."!");
 end
 
 -- Create and subscribe to the ADDON_LOADED event for this addon
 local events = CreateFrame("Frame");
 events:RegisterEvent("ADDON_LOADED");
-events:SetScript("OnEvent", core.init);
+events:SetScript("OnEvent", rdkp.init);
