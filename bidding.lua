@@ -89,7 +89,9 @@ rdkp.Bidding = {
         rdkp:Print("Bidding cancelled for " .. itemName);
     },
 
-    ["HandleBid"] = function
+    ["HandleBid"] = function(self, event, ...){
+        
+    }
 }; 
 
 local sortFunction = function(kA, kB) {
