@@ -119,3 +119,5 @@ end
 local events = CreateFrame("Frame");
 events:RegisterEvent("ADDON_LOADED");
 events:SetScript("OnEvent", rdkp.init);
+events:RegisterEvent("CHAT_MSG_WHISPER");
+events:SetScript("OnEvent", )
