@@ -64,7 +64,15 @@ rdkp.Bidding = {
     },
 
     ["AddBid"] = function(itemName, playerName, dkp){
-
+        if(rdkp.DataBase.Names[playerName]) then
+            if(items[itemName]) then
+                table.insert(items[itemName].bids, dkp)
+            else
+                dkp:Print(playerName .. " attempted to bid on " .. itemName .. " which currently not an open bid.");
+            end
+        else
+            dkp:Print(playerName .. " does not exist in the database.")
+        end  
     },
 
     ["CancelBid"] = function(itemName){
