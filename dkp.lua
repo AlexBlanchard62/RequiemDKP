@@ -8,10 +8,11 @@ rdkp.DKP = {
     },
     
     ["DistributeDKP"] = function(dkp){
-        rdkp
-    }
-
-
+        rdkp.Database.UpdateAccounts();
+        for _, accountDkp in ipairs(rdkp.Accounts) do
+            accountDkp = accountDkp + dkp;
+        end
+    },
 
 }; -- adds Config table to addon namespace
 

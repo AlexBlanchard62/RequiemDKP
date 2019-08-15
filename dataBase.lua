@@ -9,7 +9,7 @@ rdkp.Database = {
         for i = 1,numGuildMembers do
             local fullName = GetGuildRosterInfo(index);
             if(not rdkp.Names[fullName]) then
-                table.insert(rdkp.Accounts, fullName);
+                table.insert(rdkp.Accounts, 0);
                 rdkp.Names[fullName] = (#rdkp.Accounts);
             end
         end 

@@ -32,6 +32,7 @@ rdkp.Bidding = {
         end
 
         rdkp:Print("Bidding has started for " .. itemName .. " x" .. amount);
+        SendChatMessage("Bidding has started for " .. itemName .. " x" .. amount , "RAID_WARNING" , languageIndex , "1");
     },
 
     ["EndBid"] = function(itemName){
@@ -61,6 +62,14 @@ rdkp.Bidding = {
             rdkp:Print(winner);
             rdkp.AddDKP(winner, -items[itemName].bids[winner].dkp);
         end
+
+        SendChatMessage("Bidding has ended for " .. itemName .. " x" .. amount , "RAID" , languageIndex , "1");
+        SendChatMessage("Winner(s) of " .. itemName .. ":" , "RAID" , languageIndex , "1");
+        for i = 1, amount do
+            winner = items[itemName].sortedBids[i];
+            SendChatMessage(winner , "RAID" , languageIndex , "1");
+            rdkp.AddDKP(winner, -items[itemName].bids[winner].dkp);
+        end
     },
 
     ["AddBid"] = function(itemName, playerName, dkp){
@@ -79,8 +88,6 @@ rdkp.Bidding = {
         items[itemName] = nil;
         rdkp:Print("Bidding cancelled for " .. itemName);
     },
-
-
 }; 
 
 local sortFunction = function(kA, kB) {
