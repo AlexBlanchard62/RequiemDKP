@@ -7,7 +7,7 @@ local items = {};
 
 rdkp.Bidding = {
 
-    ["StartBid"] = function(itemName, amount){
+    ["StartBid"] = function(itemName, amount)
 
         if(items[itemName] and items[itemName].isOpen)
             rdkp:Print("Bidding has already started for " .. itemName .. " x" .. items[itemName].amount);
@@ -33,9 +33,9 @@ rdkp.Bidding = {
 
         rdkp:Print("Bidding has started for " .. itemName .. " x" .. amount);
         SendChatMessage("Bidding has started for " .. itemName .. " x" .. amount , "RAID_WARNING" , languageIndex , "1");
-    },
+    end,
 
-    ["EndBid"] = function(itemName){
+    ["EndBid"] = function(itemName)
         if (not items[itemName]) then
             rdkp:Print("Bidding for " .. itemName .. " not found");
             return;
@@ -70,10 +70,10 @@ rdkp.Bidding = {
             SendChatMessage(winner , "RAID" , languageIndex , "1");
             rdkp.AddDKP(winner, -items[itemName].bids[winner].dkp);
         end
-    },
+    end,
 
-    ["AddBid"] = function(itemName, playerName, dkp){
-        if(rdkp.DataBase.Names[playerName]) then
+    ["AddBid"] = function(itemName, playerName, dkp)
+        if(rdkp.Database.Names[playerName]) then
             if(items[itemName]) then
                 table.insert(items[itemName].bids, dkp)
             else
@@ -82,19 +82,19 @@ rdkp.Bidding = {
         else
             dkp:Print(playerName .. " does not exist in the database.")
         end  
-    },
+    end,
 
-    ["CancelBid"] = function(itemName){
+    ["CancelBid"] = function(itemName)
         items[itemName] = nil;
         rdkp:Print("Bidding cancelled for " .. itemName);
-    },
+    end,
 
-    ["HandleBid"] = function(self, event, ...){
+    ["HandleBid"] = function(self, event, ...)
         
-    }
+    end
 }; 
 
-local sortFunction = function(kA, kB) {
+local sortFunction = function(kA, kB) 
     playerA = items[itemName].sortedBids[kA];
     playerB = items[itemName].sortedBids[kB];
     priorityA = items[itemName].bids[playerA].priority;
@@ -106,5 +106,5 @@ local sortFunction = function(kA, kB) {
     else
         return priorityA;
     end
-}
+end
 

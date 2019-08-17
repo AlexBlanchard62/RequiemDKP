@@ -31,9 +31,13 @@ rdkp.commands = {
 
 	["endbid"] = "rdkp.Bidding.EndBid",
 
-	["guilddkp"] = "rdkp.DKP.GuildWide",
+	["mybid"] = local function(args)
+		rdkp.Bidding.AddBid(UnitName("player"), args[1]);
+	end,
 
-	["dkp"] = "rdkp.DKP.Member",
+	["guilddkp"] = "rdkp.DKP.DistributeDKP",
+
+	["adddkp"] = "rdkp.DKP.AddDKP",
 
 	["help"] = function()
 		print(" ");

@@ -15,7 +15,7 @@ rdkp.Database = {
         end 
     },
 
-    ["MergeNames"] = function(nameOne, nameTwo){
+    ["MergeNames"] = function(nameOne, nameTwo)
         if(not rdkp.Names[nameOne]) then
             rdkp:Print(nameOne .. " does not exist in the Names table.");
         elseif(not rdkp.Names[nameTwo]) then
@@ -33,13 +33,13 @@ rdkp.Database = {
                 addMember()
             end
         end
-    },
+    end,
 
-    ["AddMember"] = function(name) {
+    ["AddMember"] = function(name) 
         addmember(name);
-    },
+    end,
 
-    ["AddRole"] = function(playerName, roleName){
+    ["AddRole"] = function(playerName, roleName)
         if(not rdkp.RoleMap[roleName]) then
             local roleList = "";
             for key, _ in ipairs(rdkp.RoleMap) do
@@ -55,13 +55,13 @@ rdkp.Database = {
             rdkp.Roles[playerName] = rdkp.RoleMap[roleName];
             rdkp:Print(playerName + "\'s role was set to " .. roleName .. ".");
         end
-    }
+    end
 }
 
-local addMember = function(name){
+local addMember = function(name)
     table.insert(rdkp.Accounts, 0);
     rdkp.Names[fullName] = (#rdkp.Accounts);
-};
+end;
 
 rdkp.Names = {
     ["ZugZug"] = 1,
