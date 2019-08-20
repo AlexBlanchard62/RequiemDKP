@@ -1,6 +1,6 @@
 ## Interface: 80200 
 ## Title: RequiemDKP
-## Notes: asdf
+## Notes: test
 ## Version: 0.8
 ## DefaultState: enabled
 ## SavedVariables: rdkpNames, rdkpAccounts, rdkpRoles
@@ -10,4 +10,5 @@ dataBase.lua
 dkp.lua
 init.lua
 priority.lua
+whisper.lua
 # The 'Interface' tag must be set to the correct interface version once we know what that is

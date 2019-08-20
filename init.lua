@@ -14,7 +14,7 @@ local defaults = {
 		b = 1,
 		hex = "00ccff"
 	}
-}
+};
 
 function Config:GetThemeColor()
 	local c = defaults.theme;
@@ -27,17 +27,23 @@ end
 rdkp.commands = {
 
 	-- this will call a function from bidding.lua
-	["startbid"] = "rdkp.Bidding.StartBid",
+	["startbid"] = function(itemName, amount)
+		rdkp.Bidding.StartBid(itemName, amount);
+	end,
 
-	["endbid"] = "rdkp.Bidding.EndBid",
+	["endbid"] = rdkp.Bidding.EndBid,
 
-	["mybid"] = local function(args)
+	["mybid"] = function(args)
 		rdkp.Bidding.AddBid(UnitName("player"), args[1]);
 	end,
 
-	["guilddkp"] = "rdkp.DKP.DistributeDKP",
+	["guilddkp"] = rdkp.DKP.DistributeDKP,
 
-	["adddkp"] = "rdkp.DKP.AddDKP",
+	["adddkp"] = rdkp.DKP.AddDKP,
+
+	["distdkp"] = function(dkp)
+		rdkp.DKP.DistributeDKP(dkp);
+	end,
 
 	["help"] = function()
 		print(" ");
@@ -47,11 +53,11 @@ rdkp.commands = {
         rdkp:Print("|cff00cc66/rdkp guilddkp {dkp amount (+/-)}|r - shows config menu");
 		rdkp:Print("|cff00cc66/rdkp dkp {Character Name (+/-)} {dkp amount}|r - shows help info");
 		print(" ");
-	end,
+	end
 };
 
 local function HandleSlashCommands(str)
-	if (#str == 0) then	
+	if (#str == 0) then
 		rdkp.commands.help();
 		return;		
 	end	
@@ -63,11 +69,11 @@ local function HandleSlashCommands(str)
 		end
 	end
 	
-	local commands = rdkp.commands; 
+	local commands = rdkp.commands;
 	
 	for id, arg in ipairs(args) do
 		if (#arg > 0) then -- check for white space
-			arg = arg:lower();			
+			arg = arg:lower();
 			if (commands[arg]) then
 				if (type(commands[arg]) == "function") then				
 					-- all remaining args passed to the function
@@ -115,6 +121,8 @@ function rdkp:init(event, name)
 
 	SLASH_RequiemDKP1 = "/rdkp";
 	SlashCmdList.RequiemDKP = HandleSlashCommands;
+
+	rdkp.Database.InitDB();
 	
     rdkp:Print("Requiem DKP initiated", UnitName("player").."!");
 end
@@ -124,4 +132,4 @@ local events = CreateFrame("Frame");
 events:RegisterEvent("ADDON_LOADED");
 events:SetScript("OnEvent", rdkp.init);
 events:RegisterEvent("CHAT_MSG_WHISPER");
-events:SetScript("OnEvent", rdkp.HandleWhipserfunction);
+events:SetScript("OnEvent", rdkp.HandleWhisperFunction);

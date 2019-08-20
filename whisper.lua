@@ -3,7 +3,7 @@
 ----------------------
 local _, rdkp = ...; 
 
-function rdkp:HandleWhipserfunction(self, event, ...)
+function rdkp:HandleWhisperFunction(self, event, ...)
 	local text, playerName, languageName, channelName, playerName2, 
 	specialFlags, zoneChannelID, channelID, channelBaseName, unused,
 	lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterBox,
@@ -16,11 +16,22 @@ function rdkp:HandleWhipserfunction(self, event, ...)
 		local guildName = GetGuildInfo();
 
 		if(not rdkp.Names[playerName]) then
-			SendChatMessage("You are not in " .. guildName .. "'s database. Speak with GM to be added." , playerName , nil , "1");
+			SendChatMessage("You are not in " .. guildName .. "'s database. Speak with GM to be added." , playerName, nil , "1");
+			return;
 		end
 
 		if(args[2] == "getdkp") then 
-			if(args[3] != nil) then
+			if(args[3] ~= nil) then
+				if(args[3] == "myrole") then
+					local role = rdkp.Roles[playerName];
+					SendChatMessage("DKP for players in (" .. role .. "):" , playerName, nil , "1");
+					for guildMember, roleName in ipairs(rdkp.Roles) do
+						if(roleName == role) then
+							SendChatMessage(guildMember .. " : " .. rdkp.Accounts[rdkp.Names[guildMember]] , playerName, nil , "1");
+						end
+					end
+					return;
+				end
 				if(rdkp.Names[args[3]]) then
 					SendChatMessage( args[3] .. "'s dkp: " .. rdkp.Accounts[rdkp.Names[args[3]]], playerName , nil , "1");
 				else
@@ -32,11 +43,12 @@ function rdkp:HandleWhipserfunction(self, event, ...)
 		end
 
 		if(args[2] == "bid") then
-			if(not rdkp.BidItems[args[3]]) then
+			if(not rdkp.Bidding.IsOpenForBid(args[3])) then
 				SendChatMessage(args[3] .. " is not up for bid.", playerName , nil , "1");
 			else
-				if(toNumber(args[4]) != nil) then
-					rdkp.Bidding.AddBid(args[3], playerName, abs(args[4]));
+				local bidDkp = tonumber(args[4])
+				if(bidDkp ~= nil) then
+					rdkp.Bidding.AddBid(args[3], playerName, abs(bidDkp));
 				else
 					SendChatMessage("Your dkp value input of " .. args[4] .. " is invalid.", playerName , nil , "1");
 				end
