@@ -7,20 +7,6 @@ rdkp.Config = {};
 
 local Config = rdkp.Config;
 
-local defaults = {
-	theme = {
-		r = 0, 
-		g = 0.8, -- 204/255
-		b = 1,
-		hex = "00ccff"
-	}
-};
-
-function Config:GetThemeColor()
-	local c = defaults.theme;
-	return c.r, c.g, c.b, c.hex;
-end
-
 --------------------------------------
 -- Custom Slash Command
 --------------------------------------
@@ -92,9 +78,23 @@ local function HandleSlashCommands(str)
 	end
 end
 
+local defaults = {
+	theme = {
+		r = 0, 
+		g = 0.8, -- 204/255
+		b = 1,
+		hex = "00ccff"
+	}
+};
+
+local function GetThemeColor()
+	local c = defaults.theme;
+	return c.r, c.g, c.b, c.hex;
+end
+
 -- custom print function
 function rdkp:Print(...)
-    local hex = select(4, self.Config:GetThemeColor());
+    local hex = select(4, GetThemeColor());
     local prefix = string.format("|cff%s%s|r", hex:upper(), "RequiemDKP:");	
     DEFAULT_CHAT_FRAME:AddMessage(string.join(" ", prefix, ...));
 end
