@@ -32,5 +32,37 @@ rdkp.DKP = {
         end
     end,
 
+    ["DecayDKP"] = function(adjustment)
+        local adjNum = tonumber(adjustment);
+        local notANum = false;
+        if(adjNum ~= nil) then
+            notANum = false;
+        end
+        if(notANum or adjNum > 0 and adjNum < 1) then
+            rdkp:Print(adjustment .. " is not a valid input for decay. Please use a decimal in between 0 and 1.");
+            return;
+        end
+        for i=0,#rdkp.Accounts do
+            rdkp.Accounts[i] = rdkp.Accounts[i] * (1 - adjNum);
+        end
+        rdkp:Print("DKP successfully decayed by an adjustment value of " .. adjustment);
+    end,
+
+    ["ReversDecayDKP"] = function(adjustment)
+        local adjNum = tonumber(decay);
+        local notANum = false;
+        if(adjNum ~= nil) then
+            notANum = false;
+        end
+        if(notANum or adjNum > 0 and adjNum < 1) then
+            rdkp:Print(adjustment .. " is not a valid input for decay. Please use a decimal in between 0 and 1.");
+            return
+        end
+        for i=0,#rdkp.Accounts do
+            rdkp.Accounts[i] = rdkp.Accounts[i] / (1 - decayDecimal);
+        end
+        rdkp:Print("DKP decay successfully reversed by an adjustment value of " .. adjustment);
+    end
+
 }; -- adds Config table to addon namespace
 

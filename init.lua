@@ -26,7 +26,16 @@ end
 --------------------------------------
 rdkp.commands = {
 
-	-- this will call a function from bidding.lua
+	["adddkp"] = rdkp.DKP.AddDKP,
+
+	["distdkp"] = function(dkp)
+		rdkp.DKP.DistributeDKP(dkp);
+	end,
+
+	["decay"] = rdkp.DKP.DecayDKP;
+
+	["reversedecay"] = rdkp.DKP.ReverseDecayDKP;
+
 	["startbid"] = function(itemName, amount)
 		rdkp.Bidding.StartBid(itemName, amount);
 	end,
@@ -35,14 +44,6 @@ rdkp.commands = {
 
 	["mybid"] = function(args)
 		rdkp.Bidding.AddBid(UnitName("player"), args[1]);
-	end,
-
-	["guilddkp"] = rdkp.DKP.DistributeDKP,
-
-	["adddkp"] = rdkp.DKP.AddDKP,
-
-	["distdkp"] = function(dkp)
-		rdkp.DKP.DistributeDKP(dkp);
 	end,
 
 	["help"] = function()
