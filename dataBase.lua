@@ -28,8 +28,7 @@ rdkp.Database = {
                 table.insert(rdkp.Accounts, 0);
                 rdkp.Names[fullName] = (#rdkp.Accounts);
             end
-        end 
-
+        end
     end,
 
     ["MergeNames"] = function(nameOne, nameTwo)
@@ -73,10 +72,6 @@ rdkp.Database = {
         end
     end
 }
-
-
-
-
 
 rdkpRoleMap = {
     ["LootCouncil"] = -1;

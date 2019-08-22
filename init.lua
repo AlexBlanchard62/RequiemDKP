@@ -12,24 +12,42 @@ local Config = rdkp.Config;
 --------------------------------------
 rdkp.commands = {
 
-	["adddkp"] = rdkp.DKP.AddDKP,
+	["add"] = function(playerName, dkp)
+		rdkp.DKP.AddDKP(playerName, dkp);
+	end,
 
-	["distdkp"] = function(dkp)
+	["distribute"] = function(dkp)
 		rdkp.DKP.DistributeDKP(dkp);
 	end,
 
-	["decay"] = rdkp.DKP.DecayDKP;
+	["decay"] = function(adjustment)
+		rdkp.DKP.DecayDKP(adjustment);
+	end,
 
-	["reversedecay"] = rdkp.DKP.ReverseDecayDKP;
+	["undecay"] = function(adjustment)
+		rdkp.DKP.ReverseDecayDKP(adjustment);
+	end,
 
-	["startbid"] = function(itemName, amount)
+	["start"] = function(...)
+		local itemName, amount = rdkp.Bidding.ParseBidAndStartBidInput(...);
 		rdkp.Bidding.StartBid(itemName, amount);
 	end,
 
-	["endbid"] = rdkp.Bidding.EndBid,
+	["end"] = function(...)
+		local itemName = rdkp.Bidding.ParseEndBidInput(...);
+		rdkp.Bidding.EndBid(itemName);
+	end,
 
-	["mybid"] = function(args)
-		rdkp.Bidding.AddBid(UnitName("player"), args[1]);
+	["bid"] = function(...)
+		local itemName, amount = rdkp.Bidding.ParseBidAndStartBidInput(...);
+		local name, realm = UnitFullName("player");
+		name = name .. "-" .. realm;
+		-- local name = UnitName("player"); USE THIS INSTEAD OF LINE 43 AND 44 FOR CLASSIC
+		rdkp.Bidding.AddBid(itemName, name, amount);
+	end,
+
+	["bids"] = function()
+		rdkp.Bidding.GetOpenBids();
 	end,
 
 	["help"] = function()
@@ -66,8 +84,6 @@ local function HandleSlashCommands(str)
 					-- all remaining args passed to the function
 					commands[arg](select(id + 1, unpack(args))); 
 					return;					
-				elseif (type(commands[arg]) == "table") then				
-					commands = commands[arg]; -- go to sub table (may not use this)
 				end
 			else
 				-- incorrect input
@@ -132,5 +148,5 @@ end
 local events = CreateFrame("Frame");
 events:RegisterEvent("ADDON_LOADED");
 events:SetScript("OnEvent", rdkp.init);
-events:RegisterEvent("CHAT_MSG_WHISPER");
-events:SetScript("OnEvent", rdkp.HandleWhisperFunction);
+-- events:RegisterEvent("CHAT_MSG_WHISPER");
+-- events:SetScript("OnEvent", rdkp.HandleWhisperFunction);
