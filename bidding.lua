@@ -183,7 +183,7 @@ function rdkp:MessagePlayer(message, playerName)
     if(rdkp:PlayerIsMe(playerName)) then
         rdkp:Print(message);
     else
-        SendChatMessage(message , playerName , nil , "1");
+        SendChatMessage(message, "WHISPER" , nil , playerName);
     end
 end
 
