@@ -88,6 +88,7 @@ rdkp.Bidding = {
     ["AddBid"] = function(itemName, playerName, dkp)
         if((not itemName or not dkp)) then 
             rdkp:MessagePlayer("Invalid input for bid. (/rdkp bid [itemName] dkp)", playerName);
+            return;
         end
 
         if(rdkp.Names[playerName]) then
@@ -178,7 +179,7 @@ rdkp.Bidding = {
     
 }; 
 
-rdkp:MessagePlayer = function(message, playerName)
+function rdkp:MessagePlayer(message, playerName)
     if(rdkp:PlayerIsMe(playerName)) then
         rdkp:Print(message);
     else
@@ -186,8 +187,10 @@ rdkp:MessagePlayer = function(message, playerName)
     end
 end
 
-rdkp:PlayerIsMe = function(playerName)
-    return string.match(playerName, UnitName("player"))) -- REMOVE THIS FOR CLASSIC
+function rdkp:PlayerIsMe(playerName)
+    local name = string.match(playerName, UnitName("player"));
+    rdkp:Print(name);
+    return name ~= nil; -- REMOVE THIS FOR CLASSIC
         --return playerName == UnitName("player")        -- UNCOMMENT THIS FOR CLASSIC
 end
 
