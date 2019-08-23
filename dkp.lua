@@ -7,6 +7,7 @@ rdkp.DKP = {
         rdkp.Accounts[rdkp.Names[playerName]] = rdkp.Accounts[rdkp.Names[playerName]] + dkp;
         if(rdkp.Accounts[rdkp.Names[playerName]] < 0) then
             rdkp.Accounts[rdkp.Names[playerName]] = 0;
+            rdkp:Print(tostring(dkp) .. " dkp successfully added to " .. playerName .. "'s account.")
         end
     end,
     
@@ -30,6 +31,7 @@ rdkp.DKP = {
                 rdkp.Accounts[rdkp.Names[onlineMembers[i]]] = 0;
             end 
         end
+        rdkp:Print(tostring(dkp) .. " dkp successfully added to " .. #onlineMembers .. "online account(s).");
     end,
 
     ["DecayDKP"] = function(adjustment)
@@ -63,6 +65,5 @@ rdkp.DKP = {
         end
         rdkp:Print("DKP decay successfully reversed by an adjustment value of " .. adjustment);
     end
-
 }; -- adds Config table to addon namespace
 

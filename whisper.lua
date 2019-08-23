@@ -3,11 +3,14 @@
 ----------------------
 local _, rdkp = ...; 
 
-function rdkp:HandleWhisperFunction(self, event, ...)
+function rdkp:HandleWhisperFunction(...)
 	local text, playerName, languageName, channelName, playerName2, 
 	specialFlags, zoneChannelID, channelID, channelBaseName, unused,
 	lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterBox,
 	supressRaidIcons = ...;
+
+	rdkp:Print(text);
+	rdkp:Print(playerNAme);
 
 	local args = rdkp.split(text);
 

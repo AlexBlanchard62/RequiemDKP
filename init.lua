@@ -16,7 +16,7 @@ rdkp.commands = {
 		rdkp.DKP.AddDKP(playerName, dkp);
 	end,
 
-	["distribute"] = function(dkp)
+	["dist"] = function(dkp)
 		rdkp.DKP.DistributeDKP(dkp);
 	end,
 
@@ -116,8 +116,7 @@ function rdkp:Print(...)
 end
 
 --initializer
-function rdkp:init(event, name)
-	if (name ~= "RequiemDKP") then return end 
+function rdkp:init()
 
 	-- allows using left and right buttons to move through chat 'edit' box
 	for i = 1, NUM_CHAT_WINDOWS do
@@ -141,12 +140,30 @@ function rdkp:init(event, name)
 
 	rdkp.Database.InitDB();
 	
-    rdkp:Print("Requiem DKP initiated", UnitName("player").."!");
+	rdkp:Print("Requiem DKP initiated", UnitName("player").."!");
 end
 
 -- Create and subscribe to the ADDON_LOADED event for this addon
-local events = CreateFrame("Frame");
-events:RegisterEvent("ADDON_LOADED");
-events:SetScript("OnEvent", rdkp.init);
+local frame = CreateFrame("Frame");
+local events = {
+	["ADDON_LOADED"] = function(event, name, ...)
+		if (name ~= "RequiemDKP") then return end
+		rdkp:Print(event);
+		rdkp.init();
+	end,
+	["CHAT_MSG_WHISPER"] = function(event, ...)
+		rdkp:Print("you were whispered");
+		rdkp.HandleWhisperFunction(...)
+	end,
+}
+
+frame:SetScript("OnEvent", function(self, event, ...)
+	events[event](event, ...); -- call one of the functions above
+   end);
+for k, v in pairs(events) do
+	frame:RegisterEvent(k); -- Register all events for which handlers have been defined
+end
+-- events:RegisterEvent();
+-- events:SetScript("OnEvent", rdkp.init);
 -- events:RegisterEvent("CHAT_MSG_WHISPER");
 -- events:SetScript("OnEvent", rdkp.HandleWhisperFunction);

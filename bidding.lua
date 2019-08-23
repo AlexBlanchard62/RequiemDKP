@@ -63,7 +63,8 @@ rdkp.Bidding = {
             };
         end
 
-        rdkp:Print("Bidding has started for " .. itemName .. " x" .. amount);
+        --rdkp:Print("Bidding has started for " .. itemName .. " x" .. amount);
+        SendChatMessage("Bidding has started for " .. itemName .. " x" .. amount , "RAID" , nil , "1");
         SendChatMessage("Bidding has started for " .. itemName .. " x" .. amount , "RAID_WARNING" , nil , "1");
     end,
 
@@ -84,6 +85,30 @@ rdkp.Bidding = {
         end
     end,
 
+    ["AddBid"] = function(itemName, playerName, dkp)
+        if((not itemName or not dkp)) then 
+            rdkp:MessagePlayer("Invalid input for bid. (/rdkp bid [itemName] dkp)", playerName);
+        end
+
+        if(rdkp.Names[playerName]) then
+            if(bidItems[itemName]) then
+                if(rdkp.Accounts[rdkp.Names[playerName]] < tonumber(dkp)) then
+                    rdkp:MessagePlayer("You do not have " .. tonumber(dkp) .. " to spend. Your dkp: " .. tostring(rdkp.Accounts[rdkp.Names[playerName]]), playerName);
+                    return;
+                end
+
+                bidItems[itemName].bids[tostring(playerName)] = tonumber(dkp);
+                rdkp:MessagePlayer("You have bid " .. dkp .. " dkp on " .. itemName .. ".", playerName);
+            else
+                rdkp:MessagePlayer("You attempted to bid on " .. itemName .. " which currently not an open bid.", playerNAme);
+            end
+        else
+            local guildName = GetGuildInfo();
+            rdkp:MessagePlayer("You does not exist in " .. guildName .. "'s the database. Contact GM to be added.", playerName)
+        end
+        
+    end,
+
     ["EndBid"] = function(itemName)
         if(not itemName) then
             rdkp:Print("Invalid input.");
@@ -91,9 +116,8 @@ rdkp.Bidding = {
         elseif(not bidItems[itemName]) then
             rdkp:Print("Bidding for " .. itemName .. " not found");
             return;
-        elseif(not bidItems[itemName].isOpen) then
-            rdkp:Print("Bidding has already ended for " .. itemName);
-            return;
+        else
+            rdkp:Print("Bidding for " .. itemName .. " is now over.");
         end
 
         bidItems[itemName].isOpen = false;
@@ -101,54 +125,46 @@ rdkp.Bidding = {
         local count = 0;
         for _ in pairs(bidItems[itemName].bids) do count = count + 1 end
         if(count == 0)then
-            rdkp:Print("There were no bids submitted for " .. itemName .. ". Bidding for this item is now over.");
+            SendChatMessage("There were no bids submitted for " .. itemName .. ". Bidding for " .. itemName .. " is now over.", "RAID" , nil , "1");
+            --rdkp:Print("There were no bids submitted for " .. itemName .. ". Bidding for " .. itemName .. " is now over.");
             return;
         end
 
         table.foreach(bidItems[itemName].bids, function(k, v) table.insert(bidItems[itemName].sortedBids, k) end);
         table.sort(bidItems[itemName].sortedBids, sortFunction);
 
-        rdkp:Print("All bids for " .. itemName .. ":");
+        SendChatMessage("All bids for " .. itemName .. ":", "RAID" , nil , "1");
+        --rdkp:Print("All bids for " .. itemName .. ":");
         for i = 1, #bidItems[itemName].sortedBids do
             playerName = bidItems[itemName].sortedBids[i];
-            rdkp:Print(tostring(i) .. ". " .. playerName .. " - " .. tostring(bidItems[itemName].bids[playerName]));
+            SendChatMessage("All bids for " .. itemName .. ":", "RAID" , nil , "1");
+            --rdkp:Print(tostring(i) .. ". " .. playerName .. " - " .. tostring(bidItems[itemName].bids[playerName]));
         end
 
-        winners = {};
-        rdkp:Print("Winner(s) of " .. itemName .. ":");
-        for i = 1, bidItems[itemName].amount do
+        local numWinners = bidItems[itemName].amount;
+        local isSurplus = #bidItems[itemName].sortedBids < bidItems[itemName].amount;
+
+        if (isSurplus) then numWinners = #bidItems[itemName].sortedBids end
+
+        SendChatMessage("Winner(s) of " .. itemName .. ":", "RAID" , nil , "1");
+        --rdkp:Print("Winner(s) of " .. itemName .. ":");
+        for i = 1, numWinners do
+            if (i > #bidItems[itemName].sortedBids[i]) then break end
             winner = bidItems[itemName].sortedBids[i];
-            rdkp:Print(winner);
+            SendChatMessage(winner, "RAID" , nil , "1");
+            --rdkp:Print(winner);
             rdkp.DKP.AddDKP(winner, -bidItems[itemName].bids[tostring(winner)]);
         end
-    end,
-
-    ["AddBid"] = function(itemName, playerName, dkp)
-        if((not itemName or not dkp) and string.match(playerName, UnitName("player"))) then -- REMOVE THIS FOR CLASSIC
-        --if((not itemName or not dkp) and playerName == UnitName("player")) then           -- UNCOMMENT THIS FOR CLASSIC
-            SendChatMessage("Invalid input for bid. (/rdkp bid [itemName] dkp)" , playerName , nil , "1");
-        end
-
-        if(rdkp.Names[playerName]) then
-            if(bidItems[itemName]) then
-                bidItems[itemName].bids[tostring(playerName)] = tonumber(dkp);
-                if(string.match(playerName, UnitName("player"))) then -- REMOVE THIS FOR CLASSIC
-                --if(playerName == UnitName("player")) then           -- UNCOMMENT THIS FOR CLASSIC
-                    rdkp:Print("You have bid " .. dkp .. " dkp on " .. itemName .. ".");
-                else
-                    SendChatMessage("You have bid " .. dkp .. " dkp on " .. itemName .. ".", playerName , nil , "1");
-                end
-            else
-                dkp:Print(playerName .. " attempted to bid on " .. itemName .. " which currently not an open bid.");
-            end
-        else
-            dkp:Print(playerName .. " does not exist in the database.")
-        end
         
+        if (isSurplus) then
+            SendChatMessage((bidItems[itemName].amount - numWinners) .. " left over after bidding.", "RAID" , nil , "1");
+            --rdkp:Print((bidItems[itemName].amount - numWinners) .. " left over after bidding.")
+        end
     end,
 
     ["CancelBid"] = function(itemName)
         bidItems[itemName] = nil;
+        SendChatMessage("Bidding cancelled for " .. itemName, "RAID" , nil , "1");
         rdkp:Print("Bidding cancelled for " .. itemName);
     end,
 
@@ -161,6 +177,19 @@ rdkp.Bidding = {
     end
     
 }; 
+
+rdkp:MessagePlayer = function(message, playerName)
+    if(rdkp:PlayerIsMe(playerName)) then
+        rdkp:Print(message);
+    else
+        SendChatMessage(message , playerName , nil , "1");
+    end
+end
+
+rdkp:PlayerIsMe = function(playerName)
+    return string.match(playerName, UnitName("player"))) -- REMOVE THIS FOR CLASSIC
+        --return playerName == UnitName("player")        -- UNCOMMENT THIS FOR CLASSIC
+end
 
 local sortFunction = function(kA, kB) 
     playerA = bidItems[itemName].sortedBids[kA];
