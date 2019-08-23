@@ -189,7 +189,6 @@ end
 
 function rdkp:PlayerIsMe(playerName)
     local name = string.match(playerName, UnitName("player"));
-    rdkp:Print(name);
     return name ~= nil; -- REMOVE THIS FOR CLASSIC
         --return playerName == UnitName("player")        -- UNCOMMENT THIS FOR CLASSIC
 end
